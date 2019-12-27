@@ -31,9 +31,12 @@ ZERO = 0
 
 
 def main():
+    """
     print_welcome_message()
     get_and_set_seed()
     user_board, computer_board = get_boards()
+    """
+    get_board(USER)
 
 
 def print_welcome_message():
@@ -61,8 +64,11 @@ def get_board(player):
             first_try = True
             while not valid_battleship:
                 if player == USER:
+                    if first_try:
+                        print("Your current board:")
+                        print_board(board, USER)
                     row, column, alignment = get_battleship_from_user(
-                        battleship_size, not first_try)
+                        battleship_size, first_try)
                     first_try = False
                 else:
                     row, column, alignment = get_battleship_from_computer()
@@ -77,6 +83,28 @@ def get_board(player):
                         for current_row, current_column in battleship_indexes:
                             set_board_by_index(current_row, current_column,
                                                BATTLESHIP_MARK, board)
+
+
+def get_battleship_from_user(size, is_first_try):
+    if is_first_try:
+        message = f"Enter location for Battleship of size {size}:"
+    else:
+        message = f"ERROR: Invalid location\n" \
+                  f"Please enter location for Battleship of size {size} " \
+                  f"again:"
+
+    print(message)
+    user_input = input()
+    indexes, alignment = user_input.split(' ')
+    separated_indexes = indexes.split(',')
+    separated_indexes = [int(index) for index in separated_indexes]
+    column, row = separated_indexes
+
+    return row, column, alignment
+
+
+def get_battleship_from_computer():
+    pass
 
 
 def generate_empty_board(size):
@@ -137,7 +165,7 @@ def is_indexes_near_battleships(row, column, board):
     return False
 
 
-def set_board_by_index(row, column, new_value, board)
+def set_board_by_index(row, column, new_value, board):
     board[row][column] = new_value
 
 
@@ -159,6 +187,26 @@ def is_value_in_range(number):
 
 def get_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
+
+def print_board(board, player):
+    """
+    Prints the board which corresponds to the player.
+    :param board: the players board
+    :param player: the current player
+    :return:
+    """
+    print('    ', end='')
+    print(' '.join([str(row) for row in range(BOARD_SIZE)]))
+    print('    ', end='')
+    print(' '.join(['-' for _ in range(BOARD_SIZE)]))
+    for row in range(0, BOARD_SIZE, 1):
+        print(row, end=' | ')
+        if player == COMPUTER:
+            print(' '.join(board[row]).replace('*', ' '))
+        else:
+            print(' '.join(board[row]))
+
+    print()
 
 
 if __name__ == '__main__':
