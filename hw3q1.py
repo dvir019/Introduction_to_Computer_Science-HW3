@@ -21,6 +21,14 @@ MISS_MARK = 'X'
 HIT_MARK = 'V'
 EMPTY_MARK = ' '
 
+# Numbers
+# *** Those numbers are used several times for calculations, but don't have
+#     a meaning besides those calculations, so they don't require a
+#     separate name.
+ONE = 1
+TWO = 2
+ZERO = 0
+
 
 def main():
     print_welcome_message()
@@ -66,8 +74,24 @@ def is_battleship_in_range(row, column, size, alignment):
     return start_in_range and end_in_range
 
 
+def is_indexes_near_battleship(row, column, board):
+    outer_range = get_iteration_range(row)
+    inner_range = get_iteration_range(column)
+
+    for i in outer_range:
+        for j in inner_range:
+            if board[i][j] == BATTLESHIP_MARK:
+                return True
+
+    return False
+
+
+def get_iteration_range(number):
+    return range(max(number - ONE, 0), min(number + TWO, BOARD_SIZE))
+
+
 def calculate_new_battleship_end(index, size):
-    return index + size - 1
+    return index + size - ONE
 
 
 def is_indexes_in_range(row, column):
