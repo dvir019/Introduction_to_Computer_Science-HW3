@@ -47,10 +47,36 @@ def get_and_set_seed():
 
 
 def get_boards():
-    user_board = get_user_board()
-    computer_board = get_computer_board()
+    user_board = get_board(USER)
+    computer_board = get_board(COMPUTER)
 
     return user_board, computer_board
+
+
+def get_board(player):
+    board = generate_empty_board(BOARD_SIZE)
+    for battleship_size in range(len(SHIP_SIZE_TO_COUNT)):
+        for battleship in range(SHIP_SIZE_TO_COUNT[battleship_size]):
+            valid_battleship = False
+            first_try = True
+            while not valid_battleship:
+                if player == USER:
+                    row, column, alignment = get_battleship_from_user(
+                        battleship_size, not first_try)
+                    first_try = False
+                else:
+                    row, column, alignment = get_battleship_from_computer()
+                if is_battleship_in_range(row, column, battleship_size,
+                                          alignment):
+                    if not is_indexes_near_battleships(row, column, board):
+                        valid_battleship = True
+                        battleship_indexes = get_battleship_indexes(row,
+                                                                    column,
+                                                                    battleship_size,
+                                                                    alignment)
+                        for current_row, current_column in battleship_indexes:
+                            set_board_by_index(current_row, current_column,
+                                               BATTLESHIP_MARK, board)
 
 
 def generate_empty_board(size):
@@ -83,6 +109,7 @@ def is_battleship_near_battleships(row, column, size, alignment, board):
 
     return False
 
+
 def get_battleship_indexes(row, column, size, alignment):
     indexes = []
     for i in range(size):
@@ -111,7 +138,8 @@ def is_indexes_near_battleships(row, column, board):
 
 
 def set_board_by_index(row, column, new_value, board)
-    board[row][column]=new_value
+    board[row][column] = new_value
+
 
 def get_iteration_range(number):
     return range(max(number - ONE, 0), min(number + TWO, BOARD_SIZE))
@@ -127,6 +155,10 @@ def is_indexes_in_range(row, column):
 
 def is_value_in_range(number):
     return number >= BOARD_INDEX_MIN and number <= BOARD_INDEX_MAX
+
+
+def get_number_of_battleships():
+    return sum(SHIP_SIZE_TO_COUNT)
 
 
 if __name__ == '__main__':
