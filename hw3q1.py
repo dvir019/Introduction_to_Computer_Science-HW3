@@ -74,7 +74,31 @@ def is_battleship_in_range(row, column, size, alignment):
     return start_in_range and end_in_range
 
 
-def is_indexes_near_battleship(row, column, board):
+def is_battleship_near_battleships(row, column, size, alignment, board):
+    battleship_indexes = get_battleship_indexes(row, column, size,
+                                                alignment)
+    for current_row, current_column in battleship_indexes:
+        if is_indexes_near_battleships(current_row, current_column, board):
+            return True
+
+    return False
+
+def get_battleship_indexes(row, column, size, alignment):
+    indexes = []
+    for i in range(size):
+        # Assume the alignment is vertical
+        new_indexes = [row + i, column]
+
+        # Check if the alignment is horizontal
+        if alignment == HORIZONTAL_BATTLESHIP:
+            new_indexes = [row, column + i]
+
+        indexes.append(new_indexes)
+
+    return indexes
+
+
+def is_indexes_near_battleships(row, column, board):
     outer_range = get_iteration_range(row)
     inner_range = get_iteration_range(column)
 
@@ -85,6 +109,9 @@ def is_indexes_near_battleship(row, column, board):
 
     return False
 
+
+def set_board_by_index(row, column, new_value, board)
+    board[row][column]=new_value
 
 def get_iteration_range(number):
     return range(max(number - ONE, 0), min(number + TWO, BOARD_SIZE))
