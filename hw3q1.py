@@ -60,29 +60,37 @@ def get_board(player):
     board = generate_empty_board(BOARD_SIZE)
     for battleship_size in range(len(SHIP_SIZE_TO_COUNT)):
         for battleship in range(SHIP_SIZE_TO_COUNT[battleship_size]):
-            valid_battleship = False
-            first_try = True
-            while not valid_battleship:
-                if player == USER:
-                    if first_try:
-                        print("Your current board:")
-                        print_board(board, USER)
-                    row, column, alignment = get_battleship_from_user(
-                        battleship_size, first_try)
-                    first_try = False
-                else:
-                    row, column, alignment = get_battleship_from_computer()
-                if is_battleship_in_range(row, column, battleship_size,
-                                          alignment):
-                    if not is_indexes_near_battleships(row, column, board):
-                        valid_battleship = True
-                        battleship_indexes = get_battleship_indexes(row,
-                                                                    column,
-                                                                    battleship_size,
-                                                                    alignment)
-                        for current_row, current_column in battleship_indexes:
-                            set_board_by_index(current_row, current_column,
-                                               BATTLESHIP_MARK, board)
+            row, column, alignment = get_valid_battleship(player,
+                                                          battleship_size,
+                                                          board)
+            battleship_indexes = get_battleship_indexes(row, column,
+                                                        battleship_size,
+                                                        alignment)
+            for current_row, current_column in battleship_indexes:
+                set_board_by_index(current_row, current_column,
+                                   BATTLESHIP_MARK, board)
+
+    return board
+
+
+def get_valid_battleship(player, size, board):
+    valid_battleship = False
+    first_try = True
+    while not valid_battleship:
+        if player == USER:
+            if first_try:
+                print("Your current board:")
+                print_board(board, USER)
+            row, column, alignment = get_battleship_from_user(size,
+                                                              first_try)
+            first_try = False
+        else:
+            row, column, alignment = get_battleship_from_computer()
+        if is_battleship_in_range(row, column, size, alignment):
+            if not is_indexes_near_battleships(row, column, board):
+                valid_battleship = True
+
+    return row, column, alignment
 
 
 def get_battleship_from_user(size, is_first_try):
@@ -104,7 +112,23 @@ def get_battleship_from_user(size, is_first_try):
 
 
 def get_battleship_from_computer():
-    pass
+    row, column = get_random_indexes()
+    alignments = [HORIZONTAL_BATTLESHIP, VERTICAL_BATTLESHIP]
+    alignment_index = random.randint(ZERO, ONE)
+    alignment = alignments[alignment_index]
+
+    return row, column, alignment
+
+
+def get_random_indexes():
+    row = get_random_index()
+    column = get_random_index()
+
+    return row, column
+
+
+def get_random_index():
+    return random.randint(BOARD_INDEX_MIN, BOARD_INDEX_MAX)
 
 
 def generate_empty_board(size):
@@ -187,6 +211,7 @@ def is_value_in_range(number):
 
 def get_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
+
 
 def print_board(board, player):
     """
