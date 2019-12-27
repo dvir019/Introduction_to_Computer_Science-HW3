@@ -1,12 +1,16 @@
 import random
 
 # Constants
-N = 10
+BOARD_SIZE = 10
 USER = 0
 COMPUTER = 1
+BOARD_INDEX_MIN = 0
+BOARD_INDEX_MAX = BOARD_SIZE - 1
 
 # Battleships
 MAX_SIZE = 4
+VERTICAL_BATTLESHIP = 'v'
+HORIZONTAL_BATTLESHIP = 'h'
 # A mapping from a ship size to the number of battleship of this size
 # that need to be placed.
 SHIP_SIZE_TO_COUNT = [0, 4, 3, 2, 1]
@@ -40,8 +44,38 @@ def get_boards():
 
     return user_board, computer_board
 
+
 def generate_empty_board(size):
-    return [[EMPTY_MARK for _ in range(size)]for _ in range(size)]
+    return [[EMPTY_MARK for _ in range(size)] for _ in range(size)]
+
+
+def is_battleship_in_range(row, column, size, alignment):
+    start_in_range = is_indexes_in_range(row, column)
+
+    # Assume the alignment is vertical
+    end_row = calculate_new_battleship_end(row, size)
+    end_column = column
+
+    # Check if the alignment is horizontal
+    if alignment == HORIZONTAL_BATTLESHIP:
+        end_row = row
+        end_column = calculate_new_battleship_end(column, size)
+
+    end_in_range = is_indexes_in_range(end_row, end_column)
+
+    return start_in_range and end_in_range
+
+
+def calculate_new_battleship_end(index, size):
+    return index + size - 1
+
+
+def is_indexes_in_range(row, column):
+    return is_value_in_range(row) and is_value_in_range(column)
+
+
+def is_value_in_range(number):
+    return number >= BOARD_INDEX_MIN and number <= BOARD_INDEX_MAX
 
 
 if __name__ == '__main__':
