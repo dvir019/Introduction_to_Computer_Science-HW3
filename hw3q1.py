@@ -225,11 +225,13 @@ def get_total_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
 
 
-def is_move_valid(row, column, board):
+def is_attack_valid(row, column, board):
     in_range = is_indexes_in_range(row, column)
     already_attacked = board[row][column] in [HIT_MARK, MISS_MARK]
 
     return in_range and (not already_attacked)
+
+
 
 
 def print_battleships_located():
