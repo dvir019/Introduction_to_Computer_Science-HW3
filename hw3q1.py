@@ -42,7 +42,10 @@ def main():
     user_board, computer_board = get_boards()
     print_battleships_located()
     """
-    get_board(USER)
+    random.seed(634)
+
+    print_board(get_board(COMPUTER), USER)
+    # get_board(USER)
 
 
 def print_welcome_message():
@@ -126,13 +129,13 @@ def get_battleship_from_computer():
     alignments = [HORIZONTAL_BATTLESHIP, VERTICAL_BATTLESHIP]
     alignment_index = random.randint(ZERO, ONE)
     alignment = alignments[alignment_index]
-
+    print(row, column, alignment)
     return row, column, alignment
 
 
 def get_random_indexes():
-    row = get_random_index()
     column = get_random_index()
+    row = get_random_index()
 
     return row, column
 
@@ -143,7 +146,8 @@ def get_random_index():
 
 def is_battleship_valid(row, column, size, alignment, board):
     if is_battleship_in_range(row, column, size, alignment):
-        if not is_indexes_near_battleships(row, column, board):
+        if not is_battleship_near_battleships(row, column, size, alignment,
+                                              board):
             return True
     return False
 
@@ -237,9 +241,18 @@ def is_value_in_range(number):
 def get_total_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
 
+
 def make_a_round(user_board, computer_board):
     make_a_turn(USER, user_board)
     make_a_turn(COMPUTER, computer_board)
+
+
+def play_game(user_board, computer_board):
+    total_battleships = get_total_number_of_battleships()
+    user_battleships = computer_battleships = total_battleships
+    while user_battleships > ZERO and computer_battleships > ZERO:
+        make_a_turn(USER, user_board)
+
 
 def make_a_turn(player, board):
     if player == USER:
@@ -299,7 +312,7 @@ def print_board_with_message(board, message_code):
         message = "Your following table:"
         player = COMPUTER
     elif message_code == COMPUTER_FOLLOWING_TABLE_CODE:
-        message_code = "The computer's following table:"
+        message = "The computer's following table:"
 
     print(message)
     print_board(board, player)
