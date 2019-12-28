@@ -237,6 +237,9 @@ def is_value_in_range(number):
 def get_total_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
 
+def make_a_round(user_board, computer_board):
+    make_a_turn(USER, user_board)
+    make_a_turn(COMPUTER, computer_board)
 
 def make_a_turn(player, board):
     if player == USER:
