@@ -21,6 +21,11 @@ MISS_MARK = 'X'
 HIT_MARK = 'V'
 EMPTY_MARK = ' '
 
+# Messages codes to print with the board
+CURRENT_BOARD_CODE = 0
+USER_FOLLOWING_TABLE_CODE=1
+COMPUTER_FOLLOWING_TABLE_CODE=2
+
 # Numbers
 # *** Those numbers are used several times for calculations, but don't have
 #     a meaning besides those calculations, so they don't require a
@@ -80,8 +85,7 @@ def get_valid_battleship(player, size, board):
     while not valid_battleship:
         if player == USER:
             if first_try:
-                print("Your current board:")
-                print_board(board, USER)
+                print_board_with_message(board, CURRENT_BOARD_CODE)
             row, column, alignment = get_battleship_from_user(size,
                                                               first_try)
             first_try = False
@@ -234,6 +238,29 @@ def get_total_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
 
 
+def make_a_turn(player, board):
+    if player==USER:
+        print_board_with_message(board, USER_FOLLOWING_TABLE_CODE)
+        print_board_with_message(board, COMPUTER_FOLLOWING_TABLE_CODE)
+
+
+
+def get_valid_attack(player, board):
+    valid_attack = False
+    is_first_try = True
+    while not valid_attack:
+        if player == USER:
+            row, column = get_attack_from_user(is_first_try)
+            is_first_try = False
+        else:
+            row, column = get_random_indexes()
+
+        if is_attack_valid(row, column, board):
+            valid_attack = True
+
+    return row, column
+
+
 def is_attack_valid(row, column, board):
     in_range = is_indexes_in_range(row, column)
     already_attacked = board[row][column] in [HIT_MARK, MISS_MARK]
@@ -259,6 +286,17 @@ def get_attack_from_user(is_first_try):
 def print_battleships_located():
     print('All battleships have been located successfully!')
 
+def print_board_with_message(board, message_code):
+    message="Your current board:"
+    player=USER
+    if message_code==USER_FOLLOWING_TABLE_CODE:
+        message="Your following table:"
+        player=COMPUTER
+    elif message_code==COMPUTER_FOLLOWING_TABLE_CODE:
+        message_code="The computer's following table:"
+
+    print(message)
+    print_board(board, player)
 
 def print_board(board, player):
     """
