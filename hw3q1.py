@@ -23,8 +23,8 @@ EMPTY_MARK = ' '
 
 # Messages codes to print with the board
 CURRENT_BOARD_CODE = 0
-USER_FOLLOWING_TABLE_CODE=1
-COMPUTER_FOLLOWING_TABLE_CODE=2
+USER_FOLLOWING_TABLE_CODE = 1
+COMPUTER_FOLLOWING_TABLE_CODE = 2
 
 # Numbers
 # *** Those numbers are used several times for calculations, but don't have
@@ -239,10 +239,12 @@ def get_total_number_of_battleships():
 
 
 def make_a_turn(player, board):
-    if player==USER:
+    if player == USER:
         print_board_with_message(board, USER_FOLLOWING_TABLE_CODE)
         print_board_with_message(board, COMPUTER_FOLLOWING_TABLE_CODE)
+        print("It's your turn!")
 
+    get_valid_attack(player, board)
 
 
 def get_valid_attack(player, board):
@@ -286,17 +288,19 @@ def get_attack_from_user(is_first_try):
 def print_battleships_located():
     print('All battleships have been located successfully!')
 
+
 def print_board_with_message(board, message_code):
-    message="Your current board:"
-    player=USER
-    if message_code==USER_FOLLOWING_TABLE_CODE:
-        message="Your following table:"
-        player=COMPUTER
-    elif message_code==COMPUTER_FOLLOWING_TABLE_CODE:
-        message_code="The computer's following table:"
+    message = "Your current board:"
+    player = USER
+    if message_code == USER_FOLLOWING_TABLE_CODE:
+        message = "Your following table:"
+        player = COMPUTER
+    elif message_code == COMPUTER_FOLLOWING_TABLE_CODE:
+        message_code = "The computer's following table:"
 
     print(message)
     print_board(board, player)
+
 
 def print_board(board, player):
     """
