@@ -237,11 +237,6 @@ def get_total_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
 
 
-def make_a_round(user_board, computer_board):
-    make_a_turn(USER, user_board)
-    make_a_turn(COMPUTER, computer_board)
-
-
 def play_game(user_board, computer_board):
     total_battleships = get_total_number_of_battleships()
     user_battleships = computer_battleships = total_battleships
