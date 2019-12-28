@@ -204,7 +204,6 @@ def is_indexes_near_battleships(row, column, board):
 
 def set_board_after_attack(row, column, board):
     new_value = MISS_MARK  # Assume it's a miss
-
     if board[row][column] == BATTLESHIP_MARK:  # Check if it's a hit
         new_value = HIT_MARK
 
@@ -216,7 +215,7 @@ def set_board_by_index(row, column, new_value, board):
 
 
 def get_iteration_range(number):
-    return range(max(number - ONE, 0), min(number + TWO, BOARD_SIZE))
+    return range(max(number - ONE, ZERO), min(number + TWO, BOARD_SIZE))
 
 
 def calculate_new_battleship_end(index, size):
