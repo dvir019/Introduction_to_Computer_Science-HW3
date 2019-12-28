@@ -31,10 +31,13 @@ ZERO = 0
 
 
 def main():
+    """
     print_welcome_message()
     get_and_set_seed()
     user_board, computer_board = get_boards()
     print_battleships_located()
+    """
+    get_board(USER)
 
 
 def print_welcome_message():
@@ -84,9 +87,8 @@ def get_valid_battleship(player, size, board):
             first_try = False
         else:
             row, column, alignment = get_battleship_from_computer()
-        if is_battleship_in_range(row, column, size, alignment):
-            if not is_indexes_near_battleships(row, column, board):
-                valid_battleship = True
+        if is_battleship_valid(row, column, size, alignment, board):
+            valid_battleship = True
 
     return row, column, alignment
 
@@ -132,6 +134,13 @@ def get_random_indexes():
 
 def get_random_index():
     return random.randint(BOARD_INDEX_MIN, BOARD_INDEX_MAX)
+
+
+def is_battleship_valid(row, column, size, alignment, board):
+    if is_battleship_in_range(row, column, size, alignment):
+        if not is_indexes_near_battleships(row, column, board):
+            return True
+    return False
 
 
 def generate_empty_board(size):
@@ -209,14 +218,23 @@ def is_indexes_in_range(row, column):
 
 
 def is_value_in_range(number):
-    return number >= BOARD_INDEX_MIN and number <= BOARD_INDEX_MAX
+    return BOARD_INDEX_MIN <= number <= BOARD_INDEX_MAX
 
 
-def get_number_of_battleships():
+def get_total_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
+
+
+def is_move_valid(row, column, board):
+    in_range = is_indexes_in_range(row, column)
+    already_attacked = board[row][column] in [HIT_MARK, MISS_MARK]
+
+    return in_range and (not already_attacked)
+
 
 def print_battleships_located():
     print('All battleships have been located successfully!')
+
 
 def print_board(board, player):
     """
