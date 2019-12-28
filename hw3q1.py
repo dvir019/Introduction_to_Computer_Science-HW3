@@ -202,6 +202,15 @@ def is_indexes_near_battleships(row, column, board):
     return False
 
 
+def set_board_after_attack(row, column, board):
+    new_value = MISS_MARK  # Assume it's a miss
+
+    if board[row][column] == BATTLESHIP_MARK:  # Check if it's a hit
+        new_value = HIT_MARK
+
+    set_board_by_index(row, column, new_value, board)
+
+
 def set_board_by_index(row, column, new_value, board):
     board[row][column] = new_value
 
