@@ -94,12 +94,13 @@ def get_valid_battleship(player, size, board):
 
 
 def get_battleship_from_user(size, is_first_try):
+    # Assume it's not the first try
+    message = f"ERROR: Invalid location\nPlease enter location for " \
+              f"Battleship of size {size} again:"
+
+    # Check if it's the first try
     if is_first_try:
         message = f"Enter location for Battleship of size {size}:"
-    else:
-        message = f"ERROR: Invalid location\n" \
-                  f"Please enter location for Battleship of size {size} " \
-                  f"again:"
 
     print(message)
     user_input = input()
@@ -232,6 +233,19 @@ def is_attack_valid(row, column, board):
     return in_range and (not already_attacked)
 
 
+def get_attack_from_user(is_first_try):
+    # Assume it's not the first try
+    message = "Error: Invalid attack...\nPlease try again:"
+
+    # Check if it's the first try
+    if is_first_try:
+        message = "Enter location for attack:"
+
+    print(message)
+    indexes = input()
+    row, column = get_indexes_from_string(indexes)
+
+    return row, column
 
 
 def print_battleships_located():
