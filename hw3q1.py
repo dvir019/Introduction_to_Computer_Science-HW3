@@ -36,16 +36,12 @@ ZERO = 0
 
 
 def main():
-    """
     print_welcome_message()
     get_and_set_seed()
     user_board, computer_board = get_boards()
     print_battleships_located()
-    """
-    random.seed(634)
-
-    print_board(get_board(COMPUTER), USER)
-    # get_board(USER)
+    winner = play_game(user_board, computer_board)
+    print_winner_message(winner)
 
 
 def print_welcome_message():
@@ -129,7 +125,6 @@ def get_battleship_from_computer():
     alignments = [HORIZONTAL_BATTLESHIP, VERTICAL_BATTLESHIP]
     alignment_index = random.randint(ZERO, ONE)
     alignment = alignments[alignment_index]
-    print(row, column, alignment)
     return row, column, alignment
 
 
@@ -250,17 +245,39 @@ def make_a_round(user_board, computer_board):
 def play_game(user_board, computer_board):
     total_battleships = get_total_number_of_battleships()
     user_battleships = computer_battleships = total_battleships
+
     while user_battleships > ZERO and computer_battleships > ZERO:
-        make_a_turn(USER, user_board)
+        make_a_turn(USER, user_board, computer_board)
+        temp_computer_battleships = count_battleships(computer_board)
+        if temp_computer_battleships != computer_battleships:
+            computer_battleships = temp_computer_battleships
+            print_drown_battleship_message(COMPUTER, computer_battleships,
+                                           total_battleships)
+            if computer_battleships == ZERO:
+                return USER
+
+        make_a_turn(COMPUTER, user_board, computer_board)
+        temp_user_battleships = count_battleships(user_board)
+        if temp_user_battleships != user_battleships:
+            user_battleships = temp_user_battleships
+            print_drown_battleship_message(USER, user_battleships,
+                                           total_battleships)
+
+    return COMPUTER
 
 
-def make_a_turn(player, board):
+def make_a_turn(player, user_board, computer_board):
     if player == USER:
-        print_board_with_message(board, USER_FOLLOWING_TABLE_CODE)
-        print_board_with_message(board, COMPUTER_FOLLOWING_TABLE_CODE)
+        print_board_with_message(computer_board, USER_FOLLOWING_TABLE_CODE)
+        print_board_with_message(user_board, COMPUTER_FOLLOWING_TABLE_CODE)
         print("It's your turn!")
 
-    get_valid_attack(player, board)
+        row, column = get_valid_attack(USER, computer_board)
+        set_board_after_attack(row, column, computer_board)
+
+    else:
+        row, column = get_valid_attack(COMPUTER, user_board)
+        set_board_after_attack(row, column, user_board)
 
 
 def get_valid_attack(player, board):
@@ -280,10 +297,11 @@ def get_valid_attack(player, board):
 
 
 def is_attack_valid(row, column, board):
-    in_range = is_indexes_in_range(row, column)
-    already_attacked = board[row][column] in [HIT_MARK, MISS_MARK]
+    if is_indexes_in_range(row, column):
+        if board[row][column] not in [HIT_MARK, MISS_MARK]:
+            return True
 
-    return in_range and (not already_attacked)
+    return False
 
 
 def get_attack_from_user(is_first_try):
@@ -301,8 +319,83 @@ def get_attack_from_user(is_first_try):
     return row, column
 
 
+def check_if_top_vertical(board, x, y):
+    """
+    Check if board[y][x] is the top vertical part of the battleship
+    :param board: a following table
+    :param x: column coordinate
+    :param y: row coordinate
+    :return: True if the location is top vertical, else False.
+    """
+    for j in range(x - ONE, max(x - MAX_SIZE, -ONE), -ONE):
+        if board[y][j] not in [BATTLESHIP_MARK, HIT_MARK]:
+            return True
+        if board[y][j] == BATTLESHIP_MARK:
+            return False
+
+    return True
+
+
+def check_if_top_horizontal(board, x, y):
+    """
+    Check if board[y][x] is the top horizontal part of the battleship.
+    :param board: a following table
+    :param x: column coordinate
+    :param y: row coordinate
+    :return: True if the location is top horizontal, else False.
+    """
+    for i in range(y - ONE, max(y - MAX_SIZE, -ONE), -ONE):
+        if board[i][x] not in [BATTLESHIP_MARK, HIT_MARK]:
+            return True
+        if board[i][x] == BATTLESHIP_MARK:
+            return False
+
+    return True
+
+
+def count_battleships(board):
+    """
+    Counts the number of battleships left on the table.
+    :param board: a following table
+    :return: The number of battleships.
+    """
+    counter = ZERO
+    num_rows = num_cols = BOARD_SIZE
+    for i in range(num_rows):
+        for j in range(num_cols):
+            if board[i][j] != BATTLESHIP_MARK:
+                continue
+            if check_if_top_horizontal(board, j,
+                                       i) and check_if_top_vertical(board,
+                                                                    j, i):
+                counter += ONE
+    return counter
+
+
+def print_drown_battleship_message(player, battleships, total_battleships):
+    message = "The computer's battleship has been drowned."
+    if player == USER:
+        message = "Your battleship has been drowned."
+
+    message += f"\n{battleships}/{total_battleships} battleships remain!"
+
+    print(message)
+
+
 def print_battleships_located():
     print('All battleships have been located successfully!')
+
+
+def print_winner_message(player):
+    """
+    Prints a message when the game is over
+    :param player: the winner player
+    :return:
+    """
+    if player == USER:
+        print('Congrats! You are the winner :)')
+    else:
+        print('Game over! The computer won the fight :(')
 
 
 def print_board_with_message(board, message_code):
