@@ -34,6 +34,7 @@ def main():
     print_welcome_message()
     get_and_set_seed()
     user_board, computer_board = get_boards()
+    print_battleships_located()
 
 
 def print_welcome_message():
@@ -214,6 +215,8 @@ def is_value_in_range(number):
 def get_number_of_battleships():
     return sum(SHIP_SIZE_TO_COUNT)
 
+def print_battleships_located():
+    print('All battleships have been located successfully!')
 
 def print_board(board, player):
     """
