@@ -31,12 +31,9 @@ ZERO = 0
 
 
 def main():
-    """
     print_welcome_message()
     get_and_set_seed()
     user_board, computer_board = get_boards()
-    """
-    get_board(USER)
 
 
 def print_welcome_message():
@@ -104,11 +101,16 @@ def get_battleship_from_user(size, is_first_try):
     print(message)
     user_input = input()
     indexes, alignment = user_input.split(' ')
-    separated_indexes = indexes.split(',')
-    separated_indexes = [int(index) for index in separated_indexes]
-    column, row = separated_indexes
+    row, column = get_indexes_from_string(indexes)
 
     return row, column, alignment
+
+
+def get_indexes_from_string(str_indexes):
+    separated_indexes = str_indexes.split(',')
+    separated_indexes = [int(index) for index in separated_indexes]
+    column, row = separated_indexes
+    return row, column
 
 
 def get_battleship_from_computer():
