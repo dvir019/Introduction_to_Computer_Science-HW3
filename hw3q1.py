@@ -246,8 +246,8 @@ def play_game(user_board, computer_board):
         temp_computer_battleships = count_battleships(computer_board)
         if temp_computer_battleships != computer_battleships:
             computer_battleships = temp_computer_battleships
-            print_drown_battleship_message(COMPUTER, computer_battleships,
-                                           total_battleships)
+            print_drown_battleship(COMPUTER, computer_battleships,
+                                   total_battleships)
             if computer_battleships == ZERO:
                 return USER
 
@@ -255,8 +255,8 @@ def play_game(user_board, computer_board):
         temp_user_battleships = count_battleships(user_board)
         if temp_user_battleships != user_battleships:
             user_battleships = temp_user_battleships
-            print_drown_battleship_message(USER, user_battleships,
-                                           total_battleships)
+            print_drown_battleship(USER, user_battleships,
+                                   total_battleships)
 
     return COMPUTER
 
@@ -366,7 +366,7 @@ def count_battleships(board):
     return counter
 
 
-def print_drown_battleship_message(player, battleships, total_battleships):
+def print_drown_battleship(player, battleships, total_battleships):
     message = "The computer's battleship has been drowned."
     if player == USER:
         message = "Your battleship has been drowned."
