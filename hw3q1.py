@@ -360,9 +360,8 @@ def count_battleships(board):
         for j in range(num_cols):
             if board[i][j] != BATTLESHIP_MARK:
                 continue
-            if check_if_top_horizontal(board, j,
-                                       i) and check_if_top_vertical(board,
-                                                                    j, i):
+            if check_if_top_horizontal(board, j, i) \
+                    and check_if_top_vertical(board, j, i):
                 counter += ONE
     return counter
 
