@@ -36,6 +36,9 @@ ZERO = 0
 
 
 def main():
+    """
+    Plays the game, from start to finish.
+    """
     print_welcome_message()
     get_and_set_seed()
     user_board, computer_board = get_boards()
@@ -85,6 +88,8 @@ def get_board(player):
     :rtype: list[list[str]]
     """
     board = generate_empty_board(BOARD_SIZE)
+
+    # Iterate on every battleship size
     for battleship_size in range(len(SHIP_SIZE_TO_COUNT)):
         for battleship in range(SHIP_SIZE_TO_COUNT[battleship_size]):
             row, column, alignment = get_valid_battleship(player,
@@ -93,6 +98,7 @@ def get_board(player):
             battleship_indexes = get_battleship_indexes(row, column,
                                                         battleship_size,
                                                         alignment)
+            # Set the battleship marks
             for current_row, current_column in battleship_indexes:
                 set_board_by_index(current_row, current_column,
                                    BATTLESHIP_MARK, board)
@@ -387,6 +393,7 @@ def set_board_after_attack(row, column, board):
     :type board: list[list[str]]
     """
     new_value = MISS_MARK  # Assume it's a miss
+
     if board[row][column] == BATTLESHIP_MARK:  # Check if it's a hit
         new_value = HIT_MARK
 
@@ -406,9 +413,6 @@ def set_board_by_index(row, column, new_value, board):
     :type new_value: str
     :param board: The board of one of the players
     :type board: list[list[str]]
-
-    :return:
-    :rtype:
     """
     board[row][column] = new_value
 
@@ -501,17 +505,19 @@ def play_game(user_board, computer_board):
     total_battleships = get_total_number_of_battleships()
     user_battleships = computer_battleships = total_battleships
 
+    # Iterate as long as nobody lost
     while user_battleships > ZERO and computer_battleships > ZERO:
         computer_battleships = user_turn(computer_battleships,
                                          total_battleships, user_board,
                                          computer_board)
-
+        # The user won
         if computer_battleships == ZERO:
             return USER
 
         user_battleships = computer_turn(user_battleships,
                                          total_battleships, user_board)
 
+    # The computer won
     return COMPUTER
 
 
@@ -534,14 +540,20 @@ def user_turn(computer_battleships, total_battleships, user_board,
     :return: The new number of the computer's battleships
     :rtype: int
     """
+    # Print the boards and the messages
     print_board_with_message(computer_board, USER_FOLLOWING_TABLE_CODE)
     print_board_with_message(user_board, COMPUTER_FOLLOWING_TABLE_CODE)
     print("It's your turn!")
 
+    # Get the attack
     row, column = get_valid_attack(USER, computer_board)
+
+    # Set the board after the attack
     set_board_after_attack(row, column, computer_board)
 
     new_battleships = count_battleships(computer_board)
+
+    # The computer's battleship has been drowned
     if new_battleships != computer_battleships:
         print_drown_battleship(COMPUTER, new_battleships,
                                total_battleships)
@@ -565,10 +577,15 @@ def computer_turn(user_battleships, total_battleships, user_board):
     :return: The new number of the user's battleships
     :rtype: int
     """
+    # Get the attack
     row, column = get_valid_attack(COMPUTER, user_board)
+
+    # Set the board after the attack
     set_board_after_attack(row, column, user_board)
 
     new_battleships = count_battleships(user_board)
+
+    # The user's battleship has been drowned
     if new_battleships != user_battleships:
         print_drown_battleship(USER, new_battleships,
                                total_battleships)
@@ -771,8 +788,10 @@ def print_board_with_message(board, message_code):
     :param message_code: The code of the message to print
     :type message_code: int
     """
+    # Assume the message is about the player's current board
     message = "Your current board:"
     player = USER
+
     if message_code == USER_FOLLOWING_TABLE_CODE:
         message = "Your following table:"
         player = COMPUTER
