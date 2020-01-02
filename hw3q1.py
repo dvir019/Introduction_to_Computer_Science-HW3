@@ -205,7 +205,6 @@ def get_random_indexes():
     """
     column = get_random_index()
     row = get_random_index()
-
     return row, column
 
 
@@ -272,7 +271,7 @@ def is_battleship_in_range(row, column, size, alignment):
     :param alignment: The alignment of the battleship
     :type alignment: str
 
-    :return: Whether or not the battleship is exceeding the board's
+    :return: Whether or not the battleship is within the board's
              boundaries.
     :rtype: bool
     """
@@ -433,9 +432,9 @@ def calculate_new_battleship_end(index, size):
     Calculates the end of the battleship, and returns it.
 
     *** The meaning of the end of the battleship is determined by its
-    alignment:
-               - Vertical: The bottom indexes
-               - Horizontal: The right indexes
+        alignment:
+                  - Vertical: The bottom indexes
+                  - Horizontal: The right indexes
 
     :param index: The start of the battleship
     :type index: int
@@ -505,6 +504,8 @@ def play_game(user_board, computer_board):
     while user_battleships > ZERO and computer_battleships > ZERO:
         make_a_turn(USER, user_board, computer_board)
         temp_computer_battleships = count_battleships(computer_board)
+
+        # The computer's battleship has been drowned
         if temp_computer_battleships != computer_battleships:
             computer_battleships = temp_computer_battleships
             print_drown_battleship(COMPUTER, computer_battleships,
@@ -514,6 +515,8 @@ def play_game(user_board, computer_board):
 
         make_a_turn(COMPUTER, user_board, computer_board)
         temp_user_battleships = count_battleships(user_board)
+
+        # The user's battleship has been drowned
         if temp_user_battleships != user_battleships:
             user_battleships = temp_user_battleships
             print_drown_battleship(USER, user_battleships,
