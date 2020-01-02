@@ -421,7 +421,6 @@ def get_iteration_range(number):
     """
     Gets the iteration range for the battleship location validity check.
 
-    # TODO: better documentation!!!
     :param number: The number
     :type number: int
 
