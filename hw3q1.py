@@ -502,51 +502,78 @@ def play_game(user_board, computer_board):
     user_battleships = computer_battleships = total_battleships
 
     while user_battleships > ZERO and computer_battleships > ZERO:
-        make_a_turn(USER, user_board, computer_board)
-        temp_computer_battleships = count_battleships(computer_board)
+        computer_battleships = user_turn(computer_battleships,
+                                         total_battleships, user_board,
+                                         computer_board)
 
-        # The computer's battleship has been drowned
-        if temp_computer_battleships != computer_battleships:
-            computer_battleships = temp_computer_battleships
-            print_drown_battleship(COMPUTER, computer_battleships,
-                                   total_battleships)
-            if computer_battleships == ZERO:
-                return USER
+        if computer_battleships == ZERO:
+            return USER
 
-        make_a_turn(COMPUTER, user_board, computer_board)
-        temp_user_battleships = count_battleships(user_board)
-
-        # The user's battleship has been drowned
-        if temp_user_battleships != user_battleships:
-            user_battleships = temp_user_battleships
-            print_drown_battleship(USER, user_battleships,
-                                   total_battleships)
+        user_battleships = computer_turn(user_battleships,
+                                         total_battleships, user_board)
 
     return COMPUTER
 
 
-def make_a_turn(player, user_board, computer_board):
+def user_turn(computer_battleships, total_battleships, user_board,
+              computer_board):
     """
-    Plays one turn of a given player.
+    Plays one turn of the user.
 
-    :param player: The player
-    :type player: int
+    :param computer_battleships: The current number of the computer's
+                                 battleships
+    :type computer_battleships: int
+    :param total_battleships: The total amount of battleship each player
+                              has.
+    :type total_battleships: int
     :param user_board: The board of the user
     :type user_board: list[list[str]]
     :param computer_board: The board of the computer
     :type computer_board: list[list[str]]
+
+    :return: The new number of the computer's battleships
+    :rtype: int
     """
-    if player == USER:
-        print_board_with_message(computer_board, USER_FOLLOWING_TABLE_CODE)
-        print_board_with_message(user_board, COMPUTER_FOLLOWING_TABLE_CODE)
-        print("It's your turn!")
+    print_board_with_message(computer_board, USER_FOLLOWING_TABLE_CODE)
+    print_board_with_message(user_board, COMPUTER_FOLLOWING_TABLE_CODE)
+    print("It's your turn!")
 
-        row, column = get_valid_attack(USER, computer_board)
-        set_board_after_attack(row, column, computer_board)
+    row, column = get_valid_attack(USER, computer_board)
+    set_board_after_attack(row, column, computer_board)
 
-    else:
-        row, column = get_valid_attack(COMPUTER, user_board)
-        set_board_after_attack(row, column, user_board)
+    new_battleships = count_battleships(computer_board)
+    if new_battleships != computer_battleships:
+        print_drown_battleship(COMPUTER, new_battleships,
+                               total_battleships)
+
+    return new_battleships
+
+
+def computer_turn(user_battleships, total_battleships, user_board):
+    """
+    Plays one turn of the computer.
+
+    :param user_battleships: The current number of the user's
+                                 battleships
+    :type user_battleships: int
+    :param total_battleships: The total amount of battleship each player
+                              has.
+    :type total_battleships: int
+    :param user_board: The board of the user
+    :type user_board: list[list[str]]
+
+    :return: The new number of the user's battleships
+    :rtype: int
+    """
+    row, column = get_valid_attack(COMPUTER, user_board)
+    set_board_after_attack(row, column, user_board)
+
+    new_battleships = count_battleships(user_board)
+    if new_battleships != user_battleships:
+        print_drown_battleship(USER, new_battleships,
+                               total_battleships)
+
+    return new_battleships
 
 
 def get_valid_attack(player, board):
